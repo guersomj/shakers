@@ -28,22 +28,52 @@ def hmi_header(title):
     st.divider()
 
 
+def status_badge(label, active_text, inactive_text, active):
+    if active:
+        st.success(f"{label}: {active_text}")
+    else:
+        st.info(f"{label}: {inactive_text}")
+
+
 def show_status_panel(cycle):
     st.subheader("System Status")
+
+    st.write(f"**State:** {cycle.state}")
+    st.write(f"**Temperature:** {cycle.temperature_c} °C")
+    st.write(f"**Elapsed Time:** {cycle.elapsed_time_hours} h")
+    st.write(f"**Cycle Running:** {cycle.cycle_running}")
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.write(f"**State:** {cycle.state}")
-        st.write(f"**Temperature:** {cycle.temperature_c} °C")
-        st.write(f"**Elapsed Time:** {cycle.elapsed_time_hours} h")
-        st.write(f"**Cycle Running:** {cycle.cycle_running}")
+        status_badge(
+            "Latch",
+            "LOCKED",
+            "UNLOCKED",
+            cycle.latch_locked
+        )
+
+        status_badge(
+            "Agitator",
+            "ON",
+            "OFF",
+            cycle.agitator_on
+        )
 
     with col2:
-        st.write(f"**Latch Locked:** {cycle.latch_locked}")
-        st.write(f"**Agitator ON:** {cycle.agitator_on}")
-        st.write(f"**Buzzer ON:** {cycle.buzzer_on}")
-        st.write(f"**Finalize Enabled:** {cycle.finalize_enabled}")
+        status_badge(
+            "Buzzer",
+            "ON",
+            "OFF",
+            cycle.buzzer_on
+        )
+
+        status_badge(
+            "Finalize",
+            "ENABLED",
+            "DISABLED",
+            cycle.finalize_enabled
+        )
 
 
 def home_screen(cycle):
@@ -121,7 +151,11 @@ def confirm_screen(cycle):
     st.write(f"**Temperature:** {cycle.temperature_c} °C")
     st.write(f"**Minimum Time:** {cycle.recipe['min_time_hours']} h")
     st.write(f"**Maximum Time:** {cycle.recipe['max_time_hours']} h")
-    st.write(f"**Agitator Required:** {cycle.recipe['agitator_required']}")
+
+    if cycle.recipe["agitator_required"]:
+        st.success("Agitator Required: YES")
+    else:
+        st.info("Agitator Required: NO")
 
     st.divider()
 
