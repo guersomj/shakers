@@ -85,7 +85,7 @@ def home_screen(cycle):
 
     show_status_panel(cycle)
 
-    if st.button("CONFIGURE CYCLE", use_container_width=True):
+    if st.button("SELECT CYCLE", use_container_width=True):
         go_to("SETUP")
 
 
